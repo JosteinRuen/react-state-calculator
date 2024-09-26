@@ -1,56 +1,93 @@
 import "./App.css"
+import React, {useState} from 'react';
 
 function App() {
+
+  const [firstInput, setFirstInput] = useState("");
+  const [operation, setOperation] = useState(null);
+  const [secondInput, setSecondInput] = useState("0");
+  const [result, setResult] = useState("0");
+
+  const handleNumberClick = (number, panel) =>{
+    if(panel ==="first"){
+      setFirstInput((prev)=> prev + number);
+    }else if (panel ==="second"){
+      setSecondInput((prev)=> prev + number)
+    }
+
+    
+  }
+  const handleClear = () =>{
+      setFirstInput("");
+      setSecondInput("")
+      setOperation("+")
+      setResult("0")
+  }
+
+  const handleEqualClick = () =>{
+    if(firstInput !=="" && secondInput !== "" && operation){
+      let calculation = 0;
+      const first = parseFloat(firstInput)
+      const second = parseFloat(secondInput)
+
+      switch(operation){
+        case "+":
+          calculation = first + second
+          break;
+        case "-":
+          calculation = first - second
+          break;
+        case "*":
+          calculation = first * second
+          break;
+        case "÷":
+          calculation = first / second;
+          break;
+        default:
+          return
+      }
+      setResult(calculation)
+    }
+  }
+
 
   return (
     <div className="calculator">
       <div className="panel">
-        <p>0</p>
+        <p>{firstInput || "0"}</p>
         <div className="numbers">
-          <button>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button>0</button>
-          <button>Clear</button>
+          {[1,2,3,4,5,6,7,8,9,0].map((number) =>(
+            <button key={number} onClick={() => handleNumberClick(number, "first")}>
+              {number}
+            </button>
+          ))}
+          <button onClick={() =>handleClear()}>Clear</button>
         </div>
       </div>
 
       <div className="panel">
-        <p>+</p>
+        <p>{operation || "+"}</p>
         <div className="numbers">
-          <button>+</button>
-          <button>-</button>
-          <button>*</button>
-          <button>÷</button>
+          <button onClick={() => setOperation("+")}>+</button>
+          <button onClick={() => setOperation("-")}>-</button>
+          <button onClick ={() => setOperation("*")}>*</button>
+          <button onClick ={() => setOperation("÷")}>÷</button>
         </div>
       </div>
 
       <div className="panel">
-        <p>0</p>
-        <div className="numbers">
-          <button>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button>0</button>
-          <button>Clear</button>
+        <p>{secondInput || "0"}</p>
+        <div className="numbers">{[1,2,3,4,5,6,7,8,9,0].map((number) =>(
+            <button key={number} onClick={() => handleNumberClick(number, "second")}>
+              {number}
+            </button>
+          ))}
         </div>
       </div>
       <div className="panel answer">
-        <p>0</p>
+        <p>{result}</p>
         <div>
-          <button>=</button>
+          <button onClick={handleEqualClick}>=</button>
         </div>
       </div>
     </div>
